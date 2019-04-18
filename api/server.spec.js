@@ -18,16 +18,43 @@ describe("GET /", () => {
 });
 
 describe("GET /movies", () => {
-  it("should return status 200, json array of movies", async () => {
+  beforeEach(async () => {
+    await db("movies").truncate(); // reset the database before test
+  });
+
+  it("should return status 200, json empty array", async () => {
     const res = await request(server).get("/movies");
 
     expect(res.status).toBe(200);
     expect(res.type).toBe("application/json");
     expect(res.body).toBeInstanceOf(Array);
+    expect(res.body.length).toBe(0);
+  });
+
+  it("should return an array of movies, if database has data", async () => {
+    await db("movies").insert({
+      title: "Shazam!",
+      description: "A boy is given the ability to become an adult superhero in times of need with a single magic word."
+    });
+    await db("movies").insert({
+      title: "Captain Marvel",
+      description:
+        "The story follows Carol Danvers as she becomes one of the universe’s most powerful heroes when Earth is caught in the middle of a galactic war between two alien races. Set in the 1990s, Captain Marvel is an all-new adventure from a previously unseen period in the history of the Marvel Cinematic Universe."
+    });
+
+    const res = await request(server).get("/movies");
+    expect(res.status).toBe(200);
+    expect(res.type).toBe("application/json");
+    expect(res.body).toBeInstanceOf(Array);
+    expect(res.body.length).toBe(2);
   });
 });
 
 describe("POST /movies", () => {
+  beforeEach(async () => {
+    await db("movies").truncate(); // reset the database before test
+  });
+
   it("should add movie to the database", async () => {
     const movieData = {
       title: "Shazam!",
@@ -59,6 +86,10 @@ describe("POST /movies", () => {
 });
 
 describe("DELETE /movies/:id", () => {
+  beforeEach(async () => {
+    await db("movies").truncate(); // reset the database before test
+  });
+
   it("should delete the movie with id", async () => {
     await db("movies").insert({
       title: "Shazam!",
