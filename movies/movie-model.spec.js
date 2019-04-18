@@ -10,7 +10,6 @@ describe("movie-model", () => {
   describe("fetchAll()", () => {
     it("Should return an empty array", async () => {
       const movies = await Movies.fetchAll();
-      console.log("movies: ", movies);
       expect(movies).toHaveLength(0);
       expect(movies).toEqual([]);
     });

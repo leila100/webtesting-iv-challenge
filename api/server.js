@@ -15,4 +15,10 @@ server.get("/movies", async (req, res) => {
   res.status(200).json(movies);
 });
 
+server.post("/movies", async (req, res) => {
+  const { title, description } = req.body;
+  const [movieId] = await Movies.insert(req.body);
+  res.status(201).json(movieId);
+});
+
 module.exports = server;

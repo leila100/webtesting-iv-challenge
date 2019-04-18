@@ -26,3 +26,23 @@ describe("GET /movies", () => {
     expect(res.body).toBeInstanceOf(Array);
   });
 });
+
+describe("POST /movies", () => {
+  it("should add movie to the database", async () => {
+    const movieData = {
+      title: "Shazam!",
+      description: "A boy is given the ability to become an adult superhero in times of need with a single magic word."
+    };
+    const res = await request(server)
+      .post("/movies")
+      .send(movieData)
+      .set("Accept", "application/json");
+    expect(res.status).toBe(201);
+    expect(res.type).toBe("application/json");
+
+    const movie = await db("movies")
+      .where({ id: res.body })
+      .first();
+    expect(movie.title).toBe("Shazam!");
+  });
+});

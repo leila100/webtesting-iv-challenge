@@ -9,6 +9,10 @@ async function fetchAll() {
   return db("movies");
 }
 
-function insert(movie) {
+async function insert(movie) {
   return db("movies").insert(movie);
+  // const [id] = await db("movies").insert(movie);
+  // return db("movies")
+  //   .where({ id })
+  //   .first();
 }
