@@ -7,6 +7,10 @@ describe("movie-model", () => {
     await db("movies").truncate();
   });
 
+  afterEach(async () => {
+    await db("movies").truncate();
+  });
+
   describe("fetchAll()", () => {
     it("Should return an empty array", async () => {
       const movies = await Movies.fetchAll();
@@ -40,5 +44,16 @@ describe("movie-model", () => {
       const movies = await db("movies");
       expect(movies).toHaveLength(2);
     });
+  });
+});
+
+describe("remove()", async () => {
+  it("should remove a movie from the database", async () => {
+    await Movies.insert({
+      title: "Shazam!",
+      description: "A boy is given the ability to become an adult superhero in times of need with a single magic word."
+    });
+    const count = await Movies.remove(1);
+    expect(count).toBe(1);
   });
 });
