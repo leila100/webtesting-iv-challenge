@@ -16,9 +16,14 @@ server.get("/movies", async (req, res) => {
 });
 
 server.post("/movies", async (req, res) => {
-  const { title, description } = req.body;
   const [movieId] = await Movies.insert(req.body);
   res.status(201).json(movieId);
+});
+
+server.delete("/movies/:id", async (req, res) => {
+  const { id } = req.params;
+  const count = await Movies.remove(id);
+  res.status(200).json(count);
 });
 
 module.exports = server;
