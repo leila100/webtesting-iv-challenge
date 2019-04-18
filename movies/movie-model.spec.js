@@ -48,12 +48,31 @@ describe("movie-model", () => {
 });
 
 describe("remove()", async () => {
+  afterEach(async () => {
+    await db("movies").truncate();
+  });
+
   it("should remove a movie from the database", async () => {
-    await Movies.insert({
+    await db("movies").insert({
       title: "Shazam!",
       description: "A boy is given the ability to become an adult superhero in times of need with a single magic word."
     });
     const count = await Movies.remove(1);
     expect(count).toBe(1);
+  });
+
+  it("should only remove one movie", async () => {
+    await db("movies").insert({
+      title: "Shazam!",
+      description: "A boy is given the ability to become an adult superhero in times of need with a single magic word."
+    });
+    await db("movies").insert({
+      title: "Captain Marvel",
+      description:
+        "The story follows Carol Danvers as she becomes one of the universe’s most powerful heroes when Earth is caught in the middle of a galactic war between two alien races. Set in the 1990s, Captain Marvel is an all-new adventure from a previously unseen period in the history of the Marvel Cinematic Universe."
+    });
+    await Movies.remove(1);
+    const movies = await db("movies");
+    expect(movies.length).toBe(1);
   });
 });
