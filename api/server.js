@@ -22,8 +22,13 @@ server.post("/movies", async (req, res) => {
 
 server.delete("/movies/:id", async (req, res) => {
   const { id } = req.params;
+
   const count = await Movies.remove(id);
-  res.status(200).json(count);
+  if (count === 0) {
+    res.status(404).json("Movie with this id doesn't exist");
+  } else {
+    res.status(200).json(count);
+  }
 });
 
 module.exports = server;

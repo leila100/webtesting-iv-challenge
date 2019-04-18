@@ -47,7 +47,7 @@ describe("POST /movies", () => {
   });
 });
 
-describe("POST /movies/:id", () => {
+describe("DELETE /movies/:id", () => {
   it("should delete the movie with id", async () => {
     await db("movies").insert({
       title: "Shazam!",
@@ -67,6 +67,15 @@ describe("POST /movies/:id", () => {
     // The database should only have one movie left
     const movies = await db("movies");
     expect(movies.length).toBe(1);
-    expect(movies[0].title).toBe("Captain Marvel");
+    // expect(movies[0].title).toBe("Captain Marvel");
+    expect(movies[0].title).not.toBe("Shazam!");
+  });
+
+  it("should return status 404 if id doesn't exist", async () => {
+    let id;
+    const res = await request(server).delete(`/movies/${id}`);
+    expect(res.status).toBe(404);
+    expect(res.type).toBe("application/json");
+    expect(res.body).toBe("Movie with this id doesn't exist");
   });
 });
