@@ -16,8 +16,13 @@ server.get("/movies", async (req, res) => {
 });
 
 server.post("/movies", async (req, res) => {
-  const [movieId] = await Movies.insert(req.body);
-  res.status(201).json(movieId);
+  const { title, description } = req.body;
+  if (!title || !description) {
+    res.status(400).json("Please provide a title and a description for the movie.");
+  } else {
+    const [movieId] = await Movies.insert(req.body);
+    res.status(201).json(movieId);
+  }
 });
 
 server.delete("/movies/:id", async (req, res) => {

@@ -45,6 +45,17 @@ describe("POST /movies", () => {
       .first();
     expect(movie.title).toBe("Shazam!");
   });
+
+  it("should return status 400 if bad data passed in body", async () => {
+    const movieData = {};
+    const res = await request(server)
+      .post("/movies")
+      .send(movieData)
+      .set("Accept", "application/json");
+    expect(res.status).toBe(400);
+    expect(res.type).toBe("application/json");
+    expect(res.body).toBe("Please provide a title and a description for the movie.");
+  });
 });
 
 describe("DELETE /movies/:id", () => {
